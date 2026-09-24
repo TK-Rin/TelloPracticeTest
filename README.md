@@ -38,12 +38,12 @@ lab script), with a ~1.5s cooldown so a held-up hand doesn't repeat the move 10x
 
 | Gesture | Fingers | Action |
 |---|---|---|
-| ✊ Fist | 0 | Land |
+| ✊ Fist | 0 | Nothing (keeps hovering) |
 | ☝️ | 1 | Move up 30 cm |
 | ✌️ | 2 | Move down 30 cm |
 | 🤟-ish (3 up) | 3 | Move left 30 cm |
 | 4 up (no thumb) | 4 | Move right 30 cm |
-| 🖐️ Open palm | 5 | Nothing (keeps hovering) |
+| 🖐️ Open palm | 5 | Land |
 
 There's no video recording: it was removed because it drained the battery too fast.
 

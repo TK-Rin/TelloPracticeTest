@@ -9,12 +9,12 @@ always means one clear, predictable drone action (no drift like RC control
 would give).
 
 Gesture map (finger count, thumb included):
-    0 fingers  (fist)        -> Land
+    0 fingers  (fist)        -> Nothing (hover)
     1 finger   (index)       -> Move Up
     2 fingers  (index+mid)   -> Move Down
     3 fingers                -> Move Left
     4 fingers  (no thumb)    -> Move Right
-    5 fingers  (open palm)   -> Nothing (hover)
+    5 fingers  (open palm)   -> Land
 
 Video recording was removed on purpose: it drained the battery too fast.
 """
@@ -60,7 +60,7 @@ def process_frame(tello, frame_bgr, state):
         count = sum(fingers)
 
         if count == 5:
-            print("Gesture: FIST -> land")
+            print("Gesture: OPEN PALM -> land")
             state["stop"] = True
         elif count == 1:
             print("Gesture: 1 finger -> move up")

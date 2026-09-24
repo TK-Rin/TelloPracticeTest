@@ -107,12 +107,12 @@ camera. Hold a shape steady for about a second:
 
 | Show this | Fingers | Drone does |
 |---|---|---|
-| ✊ Fist | 0 | **Lands** |
+| ✊ Fist | 0 | Nothing (keeps hovering) |
 | ☝️ | 1 | Moves up 30 cm |
 | ✌️ | 2 | Moves down 30 cm |
 | 3 fingers | 3 | Moves left 30 cm |
 | 4 fingers (no thumb) | 4 | Moves right 30 cm |
-| 🖐️ Open palm | 5 | Nothing (keeps hovering) |
+| 🖐️ Open palm | 5 | **Lands** |
 
 There's a ~1.5s cooldown between actions, so it won't repeat a move while you hold
 the same shape.
