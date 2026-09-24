@@ -112,11 +112,10 @@ camera. Hold a shape steady for about a second:
 | ✌️ | 2 | Moves down 30 cm |
 | 3 fingers | 3 | Moves left 30 cm |
 | 4 fingers (no thumb) | 4 | Moves right 30 cm |
-| 🖐️ Open palm | 5 | Starts/stops video recording |
+| 🖐️ Open palm | 5 | Nothing (keeps hovering) |
 
 There's a ~1.5s cooldown between actions, so it won't repeat a move while you hold
-the same shape. Recordings save to `media/gesture_record_N.mp4` — check the
-terminal for "Recording started/saved" messages.
+the same shape.
 
 ## 7b. Using Follow mode
 
@@ -145,7 +144,6 @@ and closes the camera window automatically.
 
 ## 9. After the flight
 
-- Check `media/` for any recordings from Gesture mode.
 - Battery below ~10%? Recharge before the next run.
 - Going to a different PC? See the **"Works on a Portable Disk"** section of
   [README.md](README.md) — run `setup_venv.bat` there first.

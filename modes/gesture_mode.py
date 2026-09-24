@@ -14,19 +14,15 @@ Gesture map (finger count, thumb included):
     2 fingers  (index+mid)   -> Move Down
     3 fingers                -> Move Left
     4 fingers  (no thumb)    -> Move Right
-    5 fingers  (open palm)   -> Toggle video Recording on/off
+    5 fingers  (open palm)   -> Nothing (hover)
 
-Recording reuses the threaded-recorder pattern from 4newRecordVideo.py: a
-background thread keeps pulling frame_read.frame on its own, so recording
-stays smooth even while a blocking move command (e.g. move_up) is running.
+Video recording was removed on purpose: it drained the battery too fast.
 """
 import time
-from threading import Thread
 
 import cv2
 from cvzone.HandTrackingModule import HandDetector
-
-from utils.common import MEDIA_DIR
+from djitellopy import TelloException
 
 FRAME_W, FRAME_H = 640, 480
 MOVE_CM = 30
@@ -36,61 +32,19 @@ ACTION_COOLDOWN = 1.5  # seconds between two discrete gesture actions, so one
 _detector = HandDetector(detectionCon=0.75, maxHands=1)
 
 
-def new_state(frame_read=None):
+def new_state():
     return {
-        "frame_read": frame_read,
         "last_action_time": 0.0,
-        "recording": False,
-        "keep_recording": False,
-        "record_thread": None,
-        "video_index": 1,
         "stop": False,
     }
 
 
-def _start_recording(state):
-    if state["recording"] or state["frame_read"] is None:
-        return
-    frame_read = state["frame_read"]
-    state["keep_recording"] = True
-    state["recording"] = True
-
-    def _recorder():
-        frame = frame_read.frame
-        frame_bgr = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-        height, width, _ = frame_bgr.shape
-        path = MEDIA_DIR / f"gesture_record_{state['video_index']}.mp4"
-        video = cv2.VideoWriter(str(path), cv2.VideoWriter_fourcc(*"mp4v"), 30, (width, height))
-        if not video.isOpened():
-            print("VideoWriter failed to open!")
-            return
-        print(f"Recording started -> {path.name}")
-        while state["keep_recording"]:
-            frame = frame_read.frame
-            frame_bgr = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-            if frame_bgr.shape[1] == width and frame_bgr.shape[0] == height:
-                video.write(frame_bgr)
-            time.sleep(1 / 30)
-        video.release()
-        print(f"Recording saved -> {path.name}")
-
-    state["record_thread"] = Thread(target=_recorder, daemon=True)
-    state["record_thread"].start()
-
-
-def _stop_recording(state):
-    if not state["recording"]:
-        return
-    state["keep_recording"] = False
-    if state["record_thread"] is not None:
-        state["record_thread"].join()
-    state["recording"] = False
-    state["video_index"] += 1
-
-
-def stop(state):
-    """Call when leaving gesture mode (mode switch or shutdown) to close any open recording."""
-    _stop_recording(state)
+def _try_move(move):
+    """Run a move; if the Tello rejects it, warn and keep hovering instead of crashing."""
+    try:
+        move(MOVE_CM)
+    except TelloException as e:
+        print("Move rejected by the drone, ignoring:", e)
 
 
 def process_frame(tello, frame_bgr, state):
@@ -107,31 +61,23 @@ def process_frame(tello, frame_bgr, state):
 
         if count == 0:
             print("Gesture: FIST -> land")
-            stop(state)
             state["stop"] = True
         elif count == 1:
             print("Gesture: 1 finger -> move up")
-            tello.move_up(MOVE_CM)
+            _try_move(tello.move_up)
         elif count == 2:
             print("Gesture: 2 fingers -> move down")
-            tello.move_down(MOVE_CM)
+            _try_move(tello.move_down)
         elif count == 3:
             print("Gesture: 3 fingers -> move left")
-            tello.move_left(MOVE_CM)
+            _try_move(tello.move_left)
         elif count == 4:
             print("Gesture: 4 fingers -> move right")
-            tello.move_right(MOVE_CM)
-        elif count == 5:
-            if state["recording"]:
-                print("Gesture: OPEN PALM -> stop recording")
-                _stop_recording(state)
-            else:
-                print("Gesture: OPEN PALM -> start recording")
-                _start_recording(state)
+            _try_move(tello.move_right)
 
         state["last_action_time"] = now
 
-    cv2.putText(drawn, f"GESTURE MODE | recording={state['recording']}", (10, 30),
+    cv2.putText(drawn, "GESTURE MODE", (10, 30),
                 cv2.FONT_HERSHEY_COMPLEX, 0.7, (0, 255, 0), 2)
     cv2.imshow("Tello", drawn)
     cv2.waitKey(1)

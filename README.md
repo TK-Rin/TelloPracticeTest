@@ -8,7 +8,7 @@ in the air:
 
 | Mission Pad | Mode | What it does |
 |---|---|---|
-| **#4** | Hand Gesture Control | Fly it with your hand — up/down/left/right/record/land |
+| **#4** | Hand Gesture Control | Fly it with your hand — up/down/left/right/land |
 | **#2** | Human Following | Drone rises, finds a person, and follows them as they walk |
 | **#3** | Land | Safe landing from any mode |
 
@@ -43,11 +43,9 @@ lab script), with a ~1.5s cooldown so a held-up hand doesn't repeat the move 10x
 | ✌️ | 2 | Move down 30 cm |
 | 🤟-ish (3 up) | 3 | Move left 30 cm |
 | 4 up (no thumb) | 4 | Move right 30 cm |
-| 🖐️ Open palm | 5 | Toggle video recording on/off |
+| 🖐️ Open palm | 5 | Nothing (keeps hovering) |
 
-Recordings are saved to `media/gesture_record_N.mp4`, written by a background thread
-(same pattern as `4newRecordVideo.py`) so recording keeps running smoothly even while
-a blocking `move_up()`/`move_left()`/etc. command is executing.
+There's no video recording: it was removed because it drained the battery too fast.
 
 ### Mode 2 — Human Following (`modes/follow_mode.py`)
 
@@ -208,7 +206,7 @@ tellodrone/
 ├── setup_venv.bat          # recreate .venv on whichever PC this disk is plugged into
 ├── requirements.txt
 ├── hand_landmarker.task    # gesture model, auto-downloaded once, then cached here
-├── media/                  # pictures/recordings saved here (gitignored)
+├── media/                  # runtime output folder (gitignored)
 └── logs/                   # (gitignored)
 ```
 

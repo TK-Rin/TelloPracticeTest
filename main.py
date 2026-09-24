@@ -30,7 +30,7 @@ os.chdir(BASE_DIR)
 
 import cv2
 import keyboard
-from djitellopy import Tello
+from djitellopy import Tello, TelloException
 
 from modes import gesture_mode, follow_mode
 
@@ -42,6 +42,13 @@ PAD_LAND = 3
 PAD_POLL_INTERVAL = 0.3  # how often we re-check the mission pad id (seconds)
 
 FRAME_MIN_HEIGHT = 300  # discard placeholder frames, same check as the other vision labs
+
+# The Tello answers "error Not joystick" to move commands sent right after takeoff,
+# and its video stream can take a few seconds to start (longer after a crashed run).
+SETTLE_AFTER_TAKEOFF = 2.0  # seconds
+SETTLE_AFTER_STREAMON = 2.0  # seconds
+STREAM_ATTEMPTS = 3
+Tello.FRAME_GRAB_TIMEOUT = 10  # djitellopy default is 5s
 
 MODE_IDLE = "IDLE"
 MODE_GESTURE = "GESTURE"
@@ -56,6 +63,20 @@ def wait_for_stable_frame(frame_read):
             print("Stable frame shape:", frame.shape)
             return frame
         time.sleep(0.1)
+
+
+def start_video(tello):
+    """streamon + get_frame_read, restarting the stream if no frames arrive."""
+    for attempt in range(1, STREAM_ATTEMPTS + 1):
+        tello.streamon()
+        time.sleep(SETTLE_AFTER_STREAMON)
+        try:
+            return tello.get_frame_read()
+        except TelloException as e:
+            print(f"Video stream attempt {attempt}/{STREAM_ATTEMPTS} failed: {e}")
+            tello.streamoff()
+            time.sleep(1)
+    raise TelloException("No video from the Tello - power-cycle the drone and try again.")
 
 
 def main():
@@ -80,15 +101,18 @@ def main():
         tello.enable_mission_pads()
         tello.set_mission_pad_detection_direction(2)  # 0=down, 1=forward, 2=both
 
-        tello.streamon()
-        frame_read = tello.get_frame_read()
+        frame_read = start_video(tello)
         wait_for_stable_frame(frame_read)
 
         tello.takeoff()
         is_flying = True
-        tello.move_up(40)  # a bit of headroom to see hands / people / pads comfortably
+        time.sleep(SETTLE_AFTER_TAKEOFF)
+        try:
+            tello.move_up(40)  # a bit of headroom to see hands / people / pads comfortably
+        except TelloException as e:
+            print("Couldn't climb the extra 40 cm, hovering at takeoff height instead:", e)
 
-        gesture_state = gesture_mode.new_state(frame_read)
+        gesture_state = gesture_mode.new_state()
         follow_state = follow_mode.new_state(frame_read)
 
         print("Ready. Hold the drone over Pad #4 (Gesture) or Pad #2 (Follow).")
@@ -111,15 +135,11 @@ def main():
                     break
                 elif pad == PAD_GESTURE and mode != MODE_GESTURE:
                     print("Pad #4 detected -> switching to GESTURE mode")
-                    if mode == MODE_GESTURE:
-                        gesture_mode.stop(gesture_state)
                     mode = MODE_GESTURE
-                    gesture_state = gesture_mode.new_state(frame_read)
+                    gesture_state = gesture_mode.new_state()
                     tello.send_rc_control(0, 0, 0, 0)
                 elif pad == PAD_FOLLOW and mode != MODE_FOLLOW:
                     print("Pad #2 detected -> switching to FOLLOW mode")
-                    if mode == MODE_GESTURE:
-                        gesture_mode.stop(gesture_state)
                     mode = MODE_FOLLOW
                     follow_state = follow_mode.new_state(frame_read)
                     tello.send_rc_control(0, 0, 0, 0)
@@ -144,10 +164,6 @@ def main():
                 cv2.waitKey(1)
 
     finally:
-        try:
-            gesture_mode.stop(gesture_state)
-        except Exception:
-            pass
         try:
             tello.send_rc_control(0, 0, 0, 0)
         except Exception:
