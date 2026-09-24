@@ -15,6 +15,10 @@ in the air:
 Keyboard **`q`** or **`esc`** also lands the drone immediately from anywhere — always
 keep a hand near the keyboard during test flights.
 
+📋 **Flying it for real?** Use [HOW_TO_FLY.md](HOW_TO_FLY.md) — a field checklist
+that walks through powering on the drone, laying out pads, and running each mode.
+The rest of this file covers one-time computer setup.
+
 ---
 
 ## How it flies
