@@ -4,7 +4,7 @@ main.py - Practical Test: Dual-Mode Drone Control
 Two flight modes, switched live with mission pads while the drone is
 already in the air:
 
-    Pad #1 -> Hand Gesture Control mode  (modes/gesture_mode.py)
+    Pad #4 -> Hand Gesture Control mode  (modes/gesture_mode.py)
     Pad #2 -> Human Following mode       (modes/follow_mode.py)
     Pad #3 -> Land
 
@@ -36,7 +36,7 @@ from modes import gesture_mode, follow_mode
 
 MIN_BATTERY = 20
 
-PAD_GESTURE = 1
+PAD_GESTURE = 4
 PAD_FOLLOW = 2
 PAD_LAND = 3
 PAD_POLL_INTERVAL = 0.3  # how often we re-check the mission pad id (seconds)
@@ -91,7 +91,7 @@ def main():
         gesture_state = gesture_mode.new_state(frame_read)
         follow_state = follow_mode.new_state(frame_read)
 
-        print("Ready. Hold the drone over Pad #1 (Gesture) or Pad #2 (Follow).")
+        print("Ready. Hold the drone over Pad #4 (Gesture) or Pad #2 (Follow).")
         print("Pad #3, or 'q' / 'esc', lands at any time.")
 
         last_pad_check = 0.0
@@ -110,7 +110,7 @@ def main():
                     print("Land pad detected — landing.")
                     break
                 elif pad == PAD_GESTURE and mode != MODE_GESTURE:
-                    print("Pad #1 detected -> switching to GESTURE mode")
+                    print("Pad #4 detected -> switching to GESTURE mode")
                     if mode == MODE_GESTURE:
                         gesture_mode.stop(gesture_state)
                     mode = MODE_GESTURE
@@ -138,7 +138,7 @@ def main():
                 follow_state = follow_mode.process_frame(tello, frame_bgr, follow_state)
             else:
                 tello.send_rc_control(0, 0, 0, 0)
-                cv2.putText(frame_bgr, "IDLE - fly over Pad 1 (Gesture) or Pad 2 (Follow)",
+                cv2.putText(frame_bgr, "IDLE - fly over Pad 4 (Gesture) or Pad 2 (Follow)",
                             (10, 30), cv2.FONT_HERSHEY_COMPLEX, 0.6, (0, 255, 255), 2)
                 cv2.imshow("Tello", frame_bgr)
                 cv2.waitKey(1)

@@ -12,7 +12,7 @@ A field checklist for running the dual-mode project on the real Tello drone.
       charge closer to 100% if you're doing a full test run).
 - [ ] Propeller guards attached.
 - [ ] Large, open, indoor space, clear of people not involved in the test.
-- [ ] Mission Pads **#1**, **#2**, **#3** on hand, laid flat, face up.
+- [ ] Mission Pads **#4**, **#2**, **#3** on hand, laid flat, face up.
 - [ ] `.venv` already created on this PC (`setup_venv.bat` has been run at least once).
 - [ ] Someone ready at the keyboard to hit `q` / `esc` for an emergency landing.
 
@@ -24,7 +24,7 @@ Put the 3 pads flat on the floor, a meter or two apart, somewhere the drone will
 pass over/near during flight:
 
 ```
-   [Pad 1]         [Pad 2]         [Pad 3]
+   [Pad 4]         [Pad 2]         [Pad 3]
    Gesture         Follow           Land
     mode            mode
 ```
@@ -89,10 +89,10 @@ it shows which mode is active and what the drone currently sees.
 
 ## 6. Fly to a mode
 
-Physically fly (or gently guide, if you're close enough) the drone so Pad #1 or
+Physically fly (or gently guide, if you're close enough) the drone so Pad #4 or
 Pad #2 is visible to it (downward or forward, both are checked):
 
-- **Pad #1 → Gesture mode.** Terminal prints `switching to GESTURE mode`.
+- **Pad #4 → Gesture mode.** Terminal prints `switching to GESTURE mode`.
 - **Pad #2 → Follow mode.** Terminal prints `switching to FOLLOW mode`.
 
 You can fly back over the other pad at any time to switch again — it doesn't need

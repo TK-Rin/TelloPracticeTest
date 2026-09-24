@@ -8,7 +8,7 @@ in the air:
 
 | Mission Pad | Mode | What it does |
 |---|---|---|
-| **#1** | Hand Gesture Control | Fly it with your hand — up/down/left/right/record/land |
+| **#4** | Hand Gesture Control | Fly it with your hand — up/down/left/right/record/land |
 | **#2** | Human Following | Drone rises, finds a person, and follows them as they walk |
 | **#3** | Land | Safe landing from any mode |
 
@@ -26,7 +26,7 @@ The rest of this file covers one-time computer setup.
 1. Connect to the Tello's Wi-Fi, run `main.py`. The drone checks battery, takes off,
    and rises ~40 cm.
 2. It starts **idle**, hovering, watching for a mission pad below/in front of it.
-3. Hold/fly it over **Pad #1** or **Pad #2** on the floor to enter that mode — you can
+3. Hold/fly it over **Pad #4** or **Pad #2** on the floor to enter that mode — you can
    switch back and forth between pads as many times as you like mid-flight.
 4. Fly over **Pad #3**, or press `q`/`esc`, to land.
 
@@ -187,7 +187,7 @@ python -c "from djitellopy import Tello; import cv2; import cvzone; print('OK')"
 
 1. Power on the Tello, connect your PC/laptop's Wi-Fi to the drone's `TELLO-XXXXXX`
    network.
-2. Place mission pads #1, #2, #3 on the floor within the flight area.
+2. Place mission pads #4, #2, #3 on the floor within the flight area.
 3. Activate the venv, then:
    ```
    python main.py
