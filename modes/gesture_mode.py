@@ -59,7 +59,7 @@ def process_frame(tello, frame_bgr, state):
         fingers = _detector.fingersUp(hands[0])
         count = sum(fingers)
 
-        if count == 0:
+        if count == 5:
             print("Gesture: FIST -> land")
             state["stop"] = True
         elif count == 1:

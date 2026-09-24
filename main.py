@@ -108,7 +108,7 @@ def main():
         is_flying = True
         time.sleep(SETTLE_AFTER_TAKEOFF)
         try:
-            tello.move_up(40)  # a bit of headroom to see hands / people / pads comfortably
+            tello.move_up(60)  # a bit of headroom to see hands / people / pads comfortably
         except TelloException as e:
             print("Couldn't climb the extra 40 cm, hovering at takeoff height instead:", e)
 
