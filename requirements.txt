@@ -1,0 +1,10 @@
+# ===== Tello Dual-Mode Lab - Python dependencies =====
+
+djitellopy>=2.5.0
+opencv-contrib-python>=4.8.0
+numpy>=1.24.0
+keyboard>=0.13.5
+
+# Hand gesture recognition (Gesture mode)
+cvzone>=1.6.1
+mediapipe>=0.10.9

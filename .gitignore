@@ -1,0 +1,22 @@
+# Virtual environment (never portable between machines - see setup_venv.bat)
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# Recordings / pictures / logs generated at runtime
+media/*
+!media/.gitkeep
+logs/*
+!logs/.gitkeep
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
