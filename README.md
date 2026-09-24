@@ -104,6 +104,39 @@ Wi-Fi.
 
 ---
 
+## Syncing Between PCs (Git)
+
+This project is also on GitHub: https://github.com/TK-Rin/TelloPracticeTest — so you
+don't strictly need the portable disk just to move code between machines; `git`
+works too, and lets both machines' changes merge cleanly instead of one copy
+silently overwriting the other.
+
+**First time on a new PC (no local copy yet):**
+```
+git clone https://github.com/TK-Rin/TelloPracticeTest.git
+cd TelloPracticeTest
+setup_venv.bat
+```
+
+**Already have a local copy (on the disk, or a previous clone) — pull the latest:**
+```
+git pull
+```
+
+**After making changes you want to keep, on either machine:**
+```
+git add -A
+git commit -m "what changed"
+git push
+```
+
+Whichever machine you edit on, `git pull` before you start and `git push` when
+you're done keeps both PCs (and the disk) consistent. `.venv` is still excluded
+from git (see `.gitignore`) — `setup_venv.bat` remains the way to (re)build it on
+each machine.
+
+---
+
 ## First-Time Setup (per machine)
 
 ### 1. Check Python 3.11 is installed
